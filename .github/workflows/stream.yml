@@ -2,8 +2,10 @@ name: Stream
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */6 * * *"
+
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   stream:
@@ -21,4 +23,6 @@ jobs:
           docker run \
             -e VIDEO_URL="${{ secrets.VIDEO_URL }}" \
             -e YOUTUBE_STREAM_KEY="${{ secrets.YOUTUBE_STREAM_KEY }}" \
+            -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
             yt-stream
