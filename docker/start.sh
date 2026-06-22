@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Check inputs
+# Validate inputs
 if [ -z "${VIDEO_URL:-}" ]; then
     echo "ERROR: VIDEO_URL is not set"
     exit 1
@@ -13,10 +13,10 @@ if [ -z "${YOUTUBE_STREAM_KEY:-}" ]; then
     exit 1
 fi
 
-echo "Starting 24/7 YouTube Stream..."
-echo "--------------------------------"
+echo "Starting 24/7 YouTube Full HD Stream..."
+echo "----------------------------------------"
 
-# Convert comma-separated URLs into array
+# Split multiple URLs (comma-separated)
 IFS=',' read -ra URLS <<< "$VIDEO_URL"
 
 # Infinite loop playlist
@@ -28,8 +28,12 @@ while true; do
         ffmpeg \
             -re \
             -i "$url" \
+            -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" \
+            -r 30 \
             -c:v libx264 \
-            -preset ultrafast \
+            -preset veryfast \
+            -maxrate 6000k \
+            -bufsize 12000k \
             -pix_fmt yuv420p \
             -c:a aac \
             -b:a 128k \
