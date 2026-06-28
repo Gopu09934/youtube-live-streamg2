@@ -12,8 +12,6 @@ RUN apt-get update && \
 WORKDIR /app
 
 COPY start.sh .
-COPY overlay.png .
-COPY font.ttf .
 
 RUN chmod +x start.sh
 
